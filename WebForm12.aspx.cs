@@ -19,30 +19,30 @@ namespace WebApplication122
 
         protected void btnGenerate_Click(object sender, EventArgs e)
         {
-            GenerateCode(txtCode.Text);
+            GenerateTheQRCode(txtCode.Text);
         }
         //The read Button:
         protected void btnRead_Click(object sender, EventArgs e)
         {
-            ReadQRCode();
+            ReadingOfTheQRCode();
         }
 
         protected void btnGenNumber_Click(object sender, EventArgs e)
         {
-            GenerateCode2();
+            GenerateTenNumbers();
         }
 
         protected void btnWriting_Click(object sender, EventArgs e)
         {
             //create the file stream first, then write into it.
-            SaveCreateFileStream();
+            SaveandCreateFileStream();
 
 
         }
 
 
 
-        private void SaveCreateFileStream()
+        private void SaveandCreateFileStream()
         {
             //declearation of the file/folder being created:
             //STEP 1:
@@ -55,28 +55,26 @@ namespace WebApplication122
             var newFilePath = Path.Combine(newDirectoryPath, "numbers_assigned.txt");
 
             var fileStream = File.Create(newFilePath);
-
             var sw = new StreamWriter(fileStream);
-
             sw.WriteLine(lblQRCode.Text);
 
 
         }
 
-        private void GenerateCode2() {
-            Random rand = new Random();
-            long randNum = (long)(rand.NextDouble() * 90000000000) + 100000000;
-            txtCode.Text = randNum.ToString();
+        private void GenerateTenNumbers() {
+            Random randomNumbers = new Random();
+            long randomNumbers2 = (long)(randomNumbers.NextDouble() * 90000000000) + 100000000;
+            txtCode.Text = randomNumbers2.ToString();
         }
 
-        private void GenerateCode(string name) {
+        private void GenerateTheQRCode(string name) {
 
-            var Bwriter = new BarcodeWriter();
-            Bwriter.Format = BarcodeFormat.QR_CODE;
+            var TheBarCodeBeingWritten = new BarcodeWriter();
+            TheBarCodeBeingWritten.Format = BarcodeFormat.QR_CODE;
 
-            var result = Bwriter.Write(name);
+            var resultOfWrittenBarCode = TheBarCodeBeingWritten.Write(name);
             string path = Server.MapPath("~/images/QRImage.jpg");
-            var barcodeBitmap = new Bitmap(result);
+            var barcodeBitmap = new Bitmap(resultOfWrittenBarCode);
 
             using (MemoryStream memory = new MemoryStream())
             {
@@ -93,25 +91,17 @@ namespace WebApplication122
 
         }
 
-        private void ReadQRCode()
+        private void ReadingOfTheQRCode()
         {
             //Reading of the generated barcode
-            var reader = new BarcodeReader();
+            var ReadingOfTextInLabel = new BarcodeReader();
             string filename = Path.Combine(Request.MapPath("~/images"), "QRImage.jpg");
-
             //Detech and decode the barcode inside the bitmap
-            var result = reader.Decode(new Bitmap(filename));
-
-
-
-            if (result != null)
+            var ResultOfTheTextInTheLabel = ReadingOfTextInLabel.Decode(new Bitmap(filename));
+            if (ResultOfTheTextInTheLabel != null)
             {
-                lblQRCode.Text = $"QR code:{result.Text}";
+                lblQRCode.Text = $"QR code:{ResultOfTheTextInTheLabel.Text}";
             }
-
-
-            //STEP 2:
-            //
         }
     }
 }
